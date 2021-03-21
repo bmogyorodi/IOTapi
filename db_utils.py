@@ -66,7 +66,7 @@ def fetch_today():
     with conn.cursor() as cursor:
         print(fetch_day % datetime.datetime.now().date().strftime("%Y-%m-%d"))
         cursor.execute(fetch_day % datetime.datetime.now().date().strftime("%Y-%m-%d") )
-        row=cursor.fetchone()
+        row=cursor.fetchall()
         return row
 def get_month(year,month):
     conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
