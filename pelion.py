@@ -84,6 +84,7 @@ def monthData():
 @webapp.route('/day',methods=["GET"])
 def daydata():
     data=get_day(int(request.args.get('year',default="2021")),int(request.args.get('month',default="3")),int(request.args.get('day',default="1")))
+    data=ConvertSumData(data)
     json_data=jsonify(data)
     resp=make_response(json_data,200)
     return resp
