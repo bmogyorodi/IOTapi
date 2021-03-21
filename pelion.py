@@ -34,6 +34,7 @@ loaded_model = pickle.load(open(filename, 'rb'))
 
 @webapp.route('/')
 def last_move():
+    global SavedMotion
     if  len(SavedMotion)==0:
         return "Motion Tracking hasn't begun!"
     class_label=str(int(loaded_model.predict([SavedMotion[-1]])[0]))
@@ -66,6 +67,11 @@ def update():
     update=update_day_data(request.args.get('move',default="running"))
     return update
 
+@webapp.route('/debug',methods=["GET"])
+def debugData():
+    global SavedMotion
+    resp=make_response(str(len(SavedMotion)),200)
+    return resp
 
 def _current_val(value):
     # Print the current value
@@ -94,8 +100,9 @@ def Subscribe(api,mainDevice):
     except:
         print("Connection error, retry later")
 def StartAPI():
-    webapp.run('0.0.0.0', port=2333)
+    webapp.run('0.0.0.0', port=2333) #ssl_context='adhoc'
 def MinuteToDB():
+    global SavedMotion
     time.sleep(60)
     if len(SavedMotion)<60:
         print("Check connection!")

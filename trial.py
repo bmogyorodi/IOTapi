@@ -11,7 +11,7 @@ def today():
     json_day=jsonify(today)
     resp=make_response(json_day,200)
     return resp
-    
+
 if __name__ == "__main__":
-    webapp.run('0.0.0.0', port=2333) 
+    webapp.run('0.0.0.0', port=2333)  #ssl_context=('ssl/cert.pem', 'ssl/key.pem')
 
