@@ -18,7 +18,7 @@
 """Example showing basic usage of device resource subscriptions."""
 from mbed_cloud import ConnectAPI
 from mbed_cloud.exceptions import CloudAsyncError as CloudError
-from db_utils import update_db, get_entire_table, get_latest_row,fetch_today,update_day_data
+from db_utils import update_db, get_entire_table, get_latest_row,fetch_today,update_day_data,get_month,get_day,get_year
 import pickle
 import threading
 import time
@@ -62,15 +62,38 @@ def today():
     json_day=jsonify(today)
     resp=make_response(json_day,200)
     return resp
-@webapp.route('/update',methods=["GET"])
+'''@webapp.route('/update',methods=["GET"])
 def update():
     update=update_day_data(request.args.get('move',default="running"))
-    return update
+    return update''' # not used method only for debugging
 
 @webapp.route('/debug',methods=["GET"])
 def debugData():
     global SavedMotion
     resp=make_response(str(len(SavedMotion)),200)
+    return resp
+
+@webapp.route('/month',methods=["GET"])
+def monthData():
+    data=get_month(int(request.args.get('year',default="2021")),int(request.args.get('month',default="3")))
+    data=ConvertSumData(data)
+    json_data=jsonify(data)
+    resp=make_response(json_data,200)
+    return resp
+
+@webapp.route('/day',methods=["GET"])
+def daydata():
+    data=get_day(int(request.args.get('year',default="2021")),int(request.args.get('month',default="3")),int(request.args.get('day',default="1")))
+    json_data=jsonify(data)
+    resp=make_response(json_data,200)
+    return resp
+
+@webapp.route('/year',methods=["GET"])
+def yeardata():
+    data=get_year(int(request.args.get('year',default="2021")))
+    data=ConvertSumData(data)
+    json_data=jsonify(data)
+    resp=make_response(json_data,200)
     return resp
 
 def _current_val(value):
@@ -85,14 +108,15 @@ def _subscription_handler(device_id, path, value):
         decoded=value.decode("utf-8").split('?')[0]
         lasttime=time.time()
         data_array=decoded.split(',')
-        data_array=[float(i)/104.5 for i in data_array[0:3]]+[float(i)/2000 for i in data_array[3:]]
+        data_array=[float(i) for i in data_array[0:3]]+[float(i) for i in data_array[3:]]
         if len(data_array)!=0:
             SavedMotion.append(data_array)
             print(data_array)
     except UnicodeDecodeError:
         print("Unicode error, decoding failed")
     
-
+def ConvertSumData(data):
+    return [int(data[0][0]),int(data[0][1]),int(data[0][2]),int(data[0][3])]
 def Subscribe(api,mainDevice):
     try:
         api.delete_subscriptions()

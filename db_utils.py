@@ -7,6 +7,9 @@ select_all = '''select * from moveset; '''
 add_row = ''' insert into moveset (day, running, walking,jogging,cycling) values ("%s", %d, %d,%d, %d)'''
 fetch_day='''select * from moveset where day='%s'; '''
 update_move='''update moveset set %s=%d where day='%s' '''
+fetch_month='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from moveset where YEAR(day)=%d AND MONTH(day)=%d'''
+select_day='''select * from moveset where YEAR(day)=%d AND MONTH(day)=%d AND DAY(day)=%d'''
+fetch_year='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from moveset where YEAR(day)=%d '''
 #select_last_row = ''' select id, timestamp, mean, std from gaussian order by id desc limit 1; '''
 
 
@@ -65,6 +68,24 @@ def fetch_today():
         cursor.execute(fetch_day % datetime.datetime.now().date().strftime("%Y-%m-%d") )
         row=cursor.fetchone()
         return row
+def get_month(year,month):
+    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    with conn.cursor() as cursor:
+        cursor.execute(fetch_month % (year,month))
+    data=cursor.fetchall()
+    return data
+def get_day(year,month,day):
+    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    with conn.cursor() as cursor:
+        cursor.execute(select_day % (year,month,day))
+    data=cursor.fetchone()
+    return data
+def get_year(year):
+    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    with conn.cursor() as cursor:
+        cursor.execute(fetch_year % (year))
+    data=cursor.fetchall()
+    return data
 
 if __name__ == "__main__":
     get_entire_table()
