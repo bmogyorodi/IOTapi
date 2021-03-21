@@ -84,7 +84,7 @@ def monthData():
 @webapp.route('/day',methods=["GET"])
 def daydata():
     data=get_day(int(request.args.get('year',default="2021")),int(request.args.get('month',default="3")),int(request.args.get('day',default="1")))
-    data=ConvertSumData(data)
+    data=ConvertDayData(data)
     json_data=jsonify(data)
     resp=make_response(json_data,200)
     return resp
@@ -117,9 +117,15 @@ def _subscription_handler(device_id, path, value):
         print("Unicode error, decoding failed")
     
 def ConvertSumData(data):
+    print(data)
     if data[0][0]==None:
         return [0,0,0,0]
     return [int(data[0][0]),int(data[0][1]),int(data[0][2]),int(data[0][3])]
+def ConvertDayData(data):
+    print(data)
+    if data[0]==None:
+        return [0,0,0,0]
+    return [int(data[0]),int(data[1]),int(data[2]),int(data[3])]
 def Subscribe(api,mainDevice):
     try:
         api.delete_subscriptions()
