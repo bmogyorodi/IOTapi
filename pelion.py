@@ -116,6 +116,8 @@ def _subscription_handler(device_id, path, value):
         print("Unicode error, decoding failed")
     
 def ConvertSumData(data):
+    if data[0][0]==None:
+        return [0,0,0,0]
     return [int(data[0][0]),int(data[0][1]),int(data[0][2]),int(data[0][3])]
 def Subscribe(api,mainDevice):
     try:
