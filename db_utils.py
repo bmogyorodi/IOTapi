@@ -8,7 +8,7 @@ add_row = ''' insert into moveset (day, running, walking,jogging,cycling) values
 fetch_day='''select * from moveset where day='%s'; '''
 update_move='''update moveset set %s=%d where day='%s' '''
 fetch_month='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from moveset where YEAR(day)=%d AND MONTH(day)=%d'''
-select_day='''select running,walking,jogging,cycling from moveset where YEAR(day)=%d AND MONTH(day)=%d AND DAY(day)=%d'''
+select_day='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from moveset where YEAR(day)=%d AND MONTH(day)=%d AND DAY(day)=%d'''
 fetch_year='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from moveset where YEAR(day)=%d '''
 #select_last_row = ''' select id, timestamp, mean, std from gaussian order by id desc limit 1; '''
 
