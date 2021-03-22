@@ -14,7 +14,7 @@ fetch_year='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from mo
 
 
 def update_db():
-    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi",  database="moveTracker")
+    conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password",  database="moveTracker")
     for samples in data_generator():
         timestamp = datetime.datetime.now().date().strftime("%Y-%m-%d")
         with conn.cursor() as cursor:
@@ -23,7 +23,7 @@ def update_db():
         print("row added")
 
 def get_entire_table():
-    conn = pymysql.connect(host="localhost",port=3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    conn = pymysql.connect(host="localhost",port=3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(select_all)
         table = cursor.fetchall()
@@ -31,7 +31,7 @@ def get_entire_table():
         return table
 
 def update_day_data(activity):
-    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(fetch_day % datetime.datetime.now().date().strftime("%Y-%m-%d") )
         row=cursor.fetchone()
@@ -56,32 +56,32 @@ def update_day_data(activity):
         conn.commit()
         return "Row updated"
 def get_latest_row():
-    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(select_last_row)
         row = cursor.fetchone()
         return row
 def fetch_today():
-    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         print(fetch_day % datetime.datetime.now().date().strftime("%Y-%m-%d"))
         cursor.execute(fetch_day % datetime.datetime.now().date().strftime("%Y-%m-%d") )
         row=cursor.fetchall()
         return row
 def get_month(year,month):
-    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(fetch_month % (year,month))
     data=cursor.fetchall()
     return data
 def get_day(year,month,day):
-    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(select_day % (year,month,day))
     data=cursor.fetchone()
     return data
 def get_year(year):
-    conn = pymysql.connect(host="localhost",port= 3306, user="Mogyi", password="Ecneb1996Korosi", database="moveTracker")
+    conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(fetch_year % (year))
     data=cursor.fetchall()

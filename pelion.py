@@ -29,14 +29,14 @@ webapp.debug=False
 MOTION_RESOURCE = "/3200/0/4401"
 SavedMotion=[]
 lasttime=0
-filename = 'finalized_model.sav'
+filename = "acc_model.sav"#'finalized_model.sav'
 loaded_model = pickle.load(open(filename, 'rb'))
 
 @webapp.route('/')
 def last_move():
     global SavedMotion
     if  len(SavedMotion)==0:
-        return "Motion Tracking hasn't begun!"
+        return "Reconnect tracker!"
     class_label=str(int(loaded_model.predict([SavedMotion[-1]])[0]))
     if class_label=="11":
         return "Running"
@@ -119,7 +119,7 @@ def _subscription_handler(device_id, path, value):
         lasttime=time.time()
         data_array=decoded.split(',')
         g=9.81
-        data_array=[float(i)*2*g/2048 for i in data_array[0:3]]+[float(i)/10000 for i in data_array[3:]]
+        data_array=[float(i)*2*g/2048 for i in data_array[0:3]]#+[float(i)/10000 for i in data_array[3:]]
         if len(data_array)!=0:
             SavedMotion.append(data_array)
             print(data_array)
@@ -138,12 +138,12 @@ def ConvertDayData(data):
     return [int(data[0]),int(data[1]),int(data[2]),int(data[3])]
 def Subscribe(api,mainDevice):
     try:
-        api.delete_subscriptions()
-        api.add_resource_subscription_async(mainDevice.id, MOTION_RESOURCE, _subscription_handler)
+    api.delete_subscriptions()
+    api.add_resource_subscription_async(mainDevice.id, MOTION_RESOURCE, _subscription_handler)
     except:
         print("Connection error, retry later")
 def StartAPI():
-    webapp.run('0.0.0.0', port=2333) #ssl_context='adhoc'
+    webapp.run('0.0.0.0',ssl_context=('ssl/cert.pem', 'ssl/key.pem') ,port=2333) #ssl_context='adhoc'
 def MinuteToDB():
     global SavedMotion
     time.sleep(60)
@@ -180,6 +180,7 @@ def _main():
     t2=threading.Thread(target=MinuteToDB)
     t2.start()
     while True:   
+        time.sleep(1.5)
         if time.time()-lasttime>3:    
             print("Attempt reconnect!")
             Subscribe(api,mainDevice)
