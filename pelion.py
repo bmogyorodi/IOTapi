@@ -138,8 +138,8 @@ def ConvertDayData(data):
     return [int(data[0]),int(data[1]),int(data[2]),int(data[3])]
 def Subscribe(api,mainDevice):
     try:
-    api.delete_subscriptions()
-    api.add_resource_subscription_async(mainDevice.id, MOTION_RESOURCE, _subscription_handler)
+        api.delete_subscriptions()
+        api.add_resource_subscription_async(mainDevice.id, MOTION_RESOURCE, _subscription_handler)
     except:
         print("Connection error, retry later")
 def StartAPI():
