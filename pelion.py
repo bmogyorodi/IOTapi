@@ -66,7 +66,16 @@ def today():
 def update():
     update=update_day_data(request.args.get('move',default="running"))
     return update''' # not used method only for debugging
-
+@webapp.route('/connect',methods=["GET"])
+def CheckConnection():
+    global lasttime
+    connectStatus=""
+    if time.time()-lasttime>3:
+        connectStatus="Connection Lost!"
+    else:
+        connectStatus="Connected"
+    resp=make_response(connectStatus,200) 
+    return resp
 @webapp.route('/debug',methods=["GET"])
 def debugData():
     global SavedMotion
@@ -109,7 +118,8 @@ def _subscription_handler(device_id, path, value):
         decoded=value.decode("utf-8").split('?')[0]
         lasttime=time.time()
         data_array=decoded.split(',')
-        data_array=[float(i) for i in data_array[0:3]]+[float(i) for i in data_array[3:]]
+        g=9.81
+        data_array=[float(i)*2*g/2048 for i in data_array[0:3]]+[float(i)/10000 for i in data_array[3:]]
         if len(data_array)!=0:
             SavedMotion.append(data_array)
             print(data_array)
