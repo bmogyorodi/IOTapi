@@ -143,7 +143,7 @@ def Subscribe(api,mainDevice):
     except:
         print("Connection error, retry later")
 def StartAPI():
-    webapp.run('0.0.0.0',ssl_context=('ssl/cert.pem', 'ssl/key.pem') ,port=2333) #ssl_context='adhoc'
+    webapp.run('0.0.0.0' ,port=2333) #ssl_context='adhoc'  ssl_context=('ssl/cert.pem', 'ssl/key.pem')
 def MinuteToDB():
     global SavedMotion
     time.sleep(60)
