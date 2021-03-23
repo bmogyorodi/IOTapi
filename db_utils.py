@@ -10,9 +10,12 @@ update_move='''update moveset set %s=%d where day='%s' '''
 fetch_month='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from moveset where YEAR(day)=%d AND MONTH(day)=%d'''
 select_day='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from moveset where YEAR(day)=%d AND MONTH(day)=%d AND DAY(day)=%d'''
 fetch_year='''select SUM(running),SUM(walking),SUM(jogging),SUM(cycling) from moveset where YEAR(day)=%d '''
-#select_last_row = ''' select id, timestamp, mean, std from gaussian order by id desc limit 1; '''
+'''
+Queries used for interaction with moveset database
+User Reader is set up to only have permission to Select,Insert and Update moveTracker database
+'''
 
-
+#Insert new date to table, used only for immediate operation, not abled on api path seperately
 def update_db():
     conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password",  database="moveTracker")
     for samples in data_generator():
@@ -21,7 +24,7 @@ def update_db():
             cursor.execute(add_row % (timestamp, 50, 20,10,3))
         conn.commit()
         print("row added")
-
+#checking out all data
 def get_entire_table():
     conn = pymysql.connect(host="localhost",port=3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
@@ -29,7 +32,7 @@ def get_entire_table():
         table = cursor.fetchall()
         print(len(table))
         return table
-
+# Adds one minute of movement to a days movement data depending on activity label, creating new row if day's data didn't exist.
 def update_day_data(activity):
     conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
@@ -55,12 +58,15 @@ def update_day_data(activity):
         cursor.execute(update_move % (activity,new_minute,datetime.datetime.now().date().strftime("%Y-%m-%d")))
         conn.commit()
         return "Row updated"
+
+#selecting latest record, not used for debugging only
 def get_latest_row():
     conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(select_last_row)
         row = cursor.fetchone()
         return row
+#Fetching todays data, not used debugging only
 def fetch_today():
     conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
@@ -68,18 +74,21 @@ def fetch_today():
         cursor.execute(fetch_day % datetime.datetime.now().date().strftime("%Y-%m-%d") )
         row=cursor.fetchall()
         return row
+#Fetching data for a specific month requiring entry of year and month parameter
 def get_month(year,month):
     conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(fetch_month % (year,month))
     data=cursor.fetchall()
     return data
+#Fetching data for a specific day requiring entry of year and month and day parameter
 def get_day(year,month,day):
     conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
         cursor.execute(select_day % (year,month,day))
     data=cursor.fetchone()
     return data
+#Fetching data for a specific year requiring entry of year
 def get_year(year):
     conn = pymysql.connect(host="localhost",port= 3306, user="Reader", password="password", database="moveTracker")
     with conn.cursor() as cursor:
@@ -87,5 +96,5 @@ def get_year(year):
     data=cursor.fetchall()
     return data
 
-if __name__ == "__main__":
-    get_entire_table()
+#if __name__ == "__main__":
+    #get_entire_table()
