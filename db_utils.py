@@ -1,4 +1,3 @@
-from api import data_generator
 import numpy as np
 import datetime
 import pymysql
