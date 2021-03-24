@@ -147,6 +147,7 @@ def _subscription_handler(device_id, path, value):
             SavedMotion.append(data_array)
             #print(data_array)
     except UnicodeDecodeError:
+        pass
         #print("Unicode error, decoding failed") #handling error of not being about to decode incoming data (bit error)
  
  #Conversion necessary to jsonify sum data coming back from queries
