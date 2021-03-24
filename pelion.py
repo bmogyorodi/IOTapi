@@ -145,20 +145,20 @@ def _subscription_handler(device_id, path, value):
         data_array=[float(i)*2*g/2048 for i in data_array[0:3]]+[float(i)/10000 for i in data_array[3:]]
         if len(data_array)!=0:
             SavedMotion.append(data_array)
-            print(data_array)
+            #print(data_array)
     except UnicodeDecodeError:
-        print("Unicode error, decoding failed") #handling error of not being about to decode incoming data (bit error)
+        #print("Unicode error, decoding failed") #handling error of not being about to decode incoming data (bit error)
  
  #Conversion necessary to jsonify sum data coming back from queries
 def ConvertSumData(data):
-    print(data)
+    #print(data)
     if data[0][0]==None:
         return [0,0,0,0]
     return [int(data[0][0]),int(data[0][1]),int(data[0][2]),int(data[0][3])]
 
 #Same conversion for getting data for specific day
 def ConvertDayData(data):
-    print(data)
+    #print(data)
     if data[0]==None:
         return [0,0,0,0]
     return [int(data[0]),int(data[1]),int(data[2]),int(data[3])]
