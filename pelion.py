@@ -193,7 +193,7 @@ def MinuteToDB():
             update_day_data("cycling") 
         if class_label=="10":
             update_day_data("jogging")
-        print("1 minute of"+class_label+"saved to DB!")
+        print("1 minute of"+class_label+"saved to DB! from "+str(len(SavedMotion))+"datapoints")
     SavedMotion=[]
     MinuteToDB()
 
@@ -222,7 +222,7 @@ def _main():
     while True:   
         time.sleep(1.5)
         if time.time()-lasttime>3:    
-            print("Attempt reconnect!")
+            #print("Attempt reconnect!")
             Subscribe(api,mainDevice)
 
 
